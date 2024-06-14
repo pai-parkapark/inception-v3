@@ -38,7 +38,8 @@ def train(model, loss_fn, metric_fn, epochs=20, batch_size=64, num_classes=10, l
         metric_fn = inception_v3_accuracy
 
     inception_v3_trainer = InceptionTrainer(model=model, loss=loss_fn, optimizer=optimizer, metric=metric_fn,
-                                            train_data_loader=train_data_loader, valid_data_loader=valid_data_loader)
+                                            train_data_loader=train_data_loader, valid_data_loader=valid_data_loader,
+                                            mac_gpu=True)
     train_loss, train_acc = inception_v3_trainer.train(epochs)
     print(f"Trian Loss : {train_loss}, Trian accuracy : {train_acc}")
 

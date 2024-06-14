@@ -13,16 +13,16 @@ from tqdm import tqdm
 
 class InceptionTrainer(BaseTrainer):
 
-    def __init__(self, model, loss, optimizer, metric, train_data_loader, valid_data_loader, gpu=True, *args, **kwargs):
+    def __init__(self, model, loss, optimizer, metric, train_data_loader, valid_data_loader, mac_gpu=True, *args, **kwargs):
         self.model = model
         self.loss = loss
         self.optimizer = optimizer
         self.metric = metric
         self.train_data_loader = train_data_loader
         self.valid_data_loader = valid_data_loader
-        self.gpu = gpu
+        self.mac_gpu = mac_gpu
 
-        if self.gpu:
+        if self.mac_gpu:
             self.device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
             self.model = self.model.to(self.device)
 
@@ -33,7 +33,7 @@ class InceptionTrainer(BaseTrainer):
         self.model.train()
 
         for inputs, labels in tqdm(self.train_data_loader):
-            if self.gpu:
+            if self.mac_gpu:
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
             self.optimizer.zero_grad()
             outputs = self.model(inputs)
@@ -66,7 +66,7 @@ class InceptionTrainer(BaseTrainer):
         self.model.eval()
         with torch.no_grad():
             for inputs, labels in self.valid_data_loader:
-                if self.gpu:
+                if self.mac_gpu:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = self.model(inputs)
                 if isinstance(outputs, tuple):
@@ -111,7 +111,8 @@ if __name__ == '__main__':
                                             optimizer=optimizer,
                                             metric=metric_fn,
                                             train_data_loader=train_data_loader,
-                                            valid_data_loader=valid_data_loader)
+                                            valid_data_loader=valid_data_loader,
+                                            mac_gpu=True)
 
     train_loss, train_acc = inception_v3_trainer.train(epochs)
     val_loss, val_acc = inception_v3_trainer.validate()
