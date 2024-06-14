@@ -25,6 +25,7 @@ class InceptionTrainer(BaseTrainer):
         if self.gpu:
             self.device = torch.device("mps" if torch.backends.mps.is_available() else "cpu")
             self.model = self.model.to(self.device)
+
     def _train_epoch(self, epoch):
         batch_loss = 0
         batch_total = 0

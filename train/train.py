@@ -10,7 +10,6 @@ from trainer import InceptionTrainer
 
 
 def train(model, loss_fn, metric_fn, epochs=20, batch_size=64, num_classes=10, lr=0.001):
-
     transform = transforms.Compose([
         transforms.Resize((299, 299)),
         transforms.ToTensor(),
